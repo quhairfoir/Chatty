@@ -23,9 +23,8 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // loading: true,
       messages: data.messages,
-      currentUser: data.currentUser
+      currentUser: data.currentUser || {}
     };
     this.makeNewMessage = this.makeNewMessage.bind(this);
   }

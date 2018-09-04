@@ -7,8 +7,9 @@ function ID () {
 }
 
 function ChatBar ({currentUser, makeNewMessage}){
+  console.log(currentUser);
 
-  const currentUsername = currentUser.name;
+  const currentUsername = currentUser.name || 'Your username here...'
 
   const onKeyPress  = event => {
     if (event.key === 'Enter') {
@@ -22,7 +23,7 @@ function ChatBar ({currentUser, makeNewMessage}){
   }
   return (
     <footer className="chatbar">
-      <input className="chatbar-username" placeholder={currentUser.name} />
+      <input className="chatbar-username" placeholder={currentUsername} />
       <input onKeyPress={onKeyPress}
         className="chatbar-message"
         placeholder="Type a message and hit ENTER"
