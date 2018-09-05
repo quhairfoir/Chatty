@@ -34,7 +34,7 @@ export default class App extends Component {
   }
 
   makeNewMessage(content, type) {
-    const username = (type === 'postMessage') ? this.state.currentUser.name : 'Anonymous';
+    const username = (type === 'postMessage') ? this.state.currentUser.name : '';
     const newMessage = {
       type,
       username,
@@ -50,12 +50,10 @@ export default class App extends Component {
 
   handleMessage(event) {
     let message = JSON.parse(event.data);
-    console.log(message);
     if (message.type === 'incomingClientData') {
      return this.setState({clients: message.clientList })
     } else if (message.type === 'me'){
       let color = message.color;
-      console.log(color);
       return this.setState({color: color});
     }
     this.addNewMessage(message)

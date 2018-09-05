@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 
 function Message({ username, content, type, color }) {
 
-  const userColor = color ? {color: `${color}`} : '';
-
-  console.log('This is userColor:', userColor);
+  const usernameColor = color ? {color: `${color}`} : '';
 
   const messageHTML =
     type === 'incomingMessage' ? (
       <div className='message'>
-        <span className='message-username' style={userColor}>{username}</span>
+        <span className='message-username' style={usernameColor}>{username}</span>
         <span className='message-content'>{content}</span>
       </div>
     ) : (

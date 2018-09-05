@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 
 
 function ChatBar ({currentUser, makeNewMessage, setUsername}){
-  // console.log(currentUser);
 
-  const currentUsername = currentUser.name || 'Your username here...'
+  const currentUsername = (currentUser.name === 'Anonymous') ? 'Your username here...' : currentUser.name;
 
   const onBlur = event => {
+    if (event.target.value === '') {
+      return event.target.value = currentUser.name
+    }
     const name = event.target.value;
     setUsername(name);
   }
