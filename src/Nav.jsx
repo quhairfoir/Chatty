@@ -12,7 +12,7 @@ function Nav({clients}) {
     <a href='/' className='navbar-brand'>
       Chatty
     </a>
-    <p className='clientDisplay'>{clientDisplay}</p>
+    <p className='client-display'>{clientDisplay}</p>
   </nav>
   );
 }
