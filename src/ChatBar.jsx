@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 
 function ChatBar ({currentUser, makeNewMessage, setUsername}){
-  console.log(currentUser);
+  // console.log(currentUser);
 
   const currentUsername = currentUser.name || 'Your username here...'
 
@@ -23,7 +23,6 @@ function ChatBar ({currentUser, makeNewMessage, setUsername}){
   return (
     <footer className='chatbar'>
       <input onBlur={onBlur}
-        // onChange={onChange} 
         className='chatbar-username' 
         placeholder={currentUsername} 
         />
@@ -35,7 +34,6 @@ function ChatBar ({currentUser, makeNewMessage, setUsername}){
   );
 }
 ChatBar.propTypes = {
-  // alertNameChange: PropTypes.func,
   setUsername: PropTypes.func,
   makeNewMessage: PropTypes.func,
   currentUser: PropTypes.object

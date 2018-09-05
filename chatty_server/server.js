@@ -30,12 +30,23 @@ let clients = {
 wss.on('connection', client => {
   console.log('Client connected');
 
+  const broadcastMessage = message => {
+    wss.clients.forEach(function each(client) {
+      // if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      // }
+    });
+  };
+
   const clientConnected = (client, clientID) => {
     clients.clientList[clientID] = {
       clientID,
       color: randomColor().hexString()
     }
-    client.send(JSON.stringify(clients))
+    let user = clients.clientList[clientID];
+    user.type = 'me';
+    client.send(JSON.stringify(user));
+    broadcastMessage(JSON.stringify(clients))
   }
 
   const clientID = uuidv1();
@@ -49,32 +60,25 @@ wss.on('connection', client => {
       message.type === 'postMessage'
         ? 'incomingMessage'
         : 'incomingNotification';
-    // console.log('incoming message:', message);
-    console.log(`User ${message.username} said ${message.content}`)
+    console.log(`User ${message.username}, who has color ${message.color} said ${message.content}`)
     const newMessage = {
       type,
       id: uuidv1(),
       username: message.username,
-      content: message.content
+      content: message.content,
+      color: message.color
     };
-    // console.log('This is newMessage before being sent', newMessage);
     const messageString = JSON.stringify(newMessage);
     broadcastMessage(messageString);
-  });
+  });  
 
-  const broadcastMessage = message => {
-    wss.clients.forEach(function each(client) {
-      // if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      // }
-    });
-  };
-
+  // broadcasts disconnection message 
   const clientDisconected = clientId => {
     const client = clients.clientList[clientId]
     if (!client) return // catch race condition
     console.log(`<< (${clientId}) disconnected`)
     delete clients.clientList[clientId]
+    broadcastMessage(JSON.stringify(clients))
   }
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.

@@ -8,7 +8,8 @@ export default class App extends Component {
     super(props);
     this.state = {
       messages: [],
-      currentUser: {},
+      currentUser: {name: 'Anonymous'},
+      color: '',
       connection: {},
       clients: {}
     };
@@ -16,7 +17,6 @@ export default class App extends Component {
     this.addNewMessage = this.addNewMessage.bind(this);
     this.handleMessage = this.handleMessage.bind(this);
     this.setUsername = this.setUsername.bind(this);
-    // this.alertNameChange = this.alertNameChange.bind(this);
   }
 
   addNewMessage(message) {
@@ -34,11 +34,12 @@ export default class App extends Component {
   }
 
   makeNewMessage(content, type) {
-    const username = (type === 'postMessage') ? this.state.currentUser.name : {};
+    const username = (type === 'postMessage') ? this.state.currentUser.name : 'Anonymous';
     const newMessage = {
       type,
       username,
-      content
+      content,
+      color: this.state.color
     };
     this.sendMessage(newMessage);
   }
@@ -49,12 +50,14 @@ export default class App extends Component {
 
   handleMessage(event) {
     let message = JSON.parse(event.data);
+    console.log(message);
     if (message.type === 'incomingClientData') {
-     return this.setState ({clients: message.clientList })
-      // console.log('Client data message:', message);
-      // return console.log(this.state.clients);
+     return this.setState({clients: message.clientList })
+    } else if (message.type === 'me'){
+      let color = message.color;
+      console.log(color);
+      return this.setState({color: color});
     }
-    // console.log(message);
     this.addNewMessage(message)
   }
 
@@ -66,7 +69,8 @@ export default class App extends Component {
         id: 3,
         username: 'Michelle',
         content: 'Hello there!',
-        type: 'incomingMessage'
+        type: 'incomingMessage',
+        color: '#E479F2'
       };
       const messages = this.state.messages.concat(newMessage);
       this.setState({ messages: messages });
