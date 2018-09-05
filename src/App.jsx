@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
+import Nav from './Nav.jsx';
 
 export default class App extends Component {
   constructor(props) {
@@ -8,12 +9,14 @@ export default class App extends Component {
     this.state = {
       messages: [],
       currentUser: {},
-      connection: {}
+      connection: {},
+      clients: {}
     };
     this.makeNewMessage = this.makeNewMessage.bind(this);
     this.addNewMessage = this.addNewMessage.bind(this);
     this.handleMessage = this.handleMessage.bind(this);
     this.setUsername = this.setUsername.bind(this);
+    // this.alertNameChange = this.alertNameChange.bind(this);
   }
 
   addNewMessage(message) {
@@ -23,12 +26,18 @@ export default class App extends Component {
   }
 
   setUsername(name) {
+    const oldName = this.state.currentUser.name;
+    const newName = name;
+    const message = `${oldName} changed their name to ${newName}`
+    this.makeNewMessage(message, 'postNotification')
     this.setState({currentUser: {name}});
   }
 
-  makeNewMessage(content) {
+  makeNewMessage(content, type) {
+    const username = (type === 'postMessage') ? this.state.currentUser.name : {};
     const newMessage = {
-      username: this.state.currentUser.name,
+      type,
+      username,
       content
     };
     this.sendMessage(newMessage);
@@ -40,8 +49,13 @@ export default class App extends Component {
 
   handleMessage(event) {
     let message = JSON.parse(event.data);
-    console.log(message);
-    this.addNewMessage(message);
+    if (message.type === 'incomingClientData') {
+     return this.setState ({clients: message.clientList })
+      // console.log('Client data message:', message);
+      // return console.log(this.state.clients);
+    }
+    // console.log(message);
+    this.addNewMessage(message)
   }
 
   componentDidMount() {
@@ -51,7 +65,8 @@ export default class App extends Component {
       const newMessage = {
         id: 3,
         username: 'Michelle',
-        content: 'Hello there!'
+        content: 'Hello there!',
+        type: 'incomingMessage'
       };
       const messages = this.state.messages.concat(newMessage);
       this.setState({ messages: messages });
@@ -67,16 +82,13 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <nav className='navbar'>
-          <a href='/' className='navbar-brand'>
-            Chatty
-          </a>
-        </nav>
+        <Nav clients={this.state.clients}/>
         <MessageList messages={this.state.messages} />
         <ChatBar
           currentUser={this.state.currentUser}
           makeNewMessage={this.makeNewMessage}
           setUsername={this.setUsername}
+          alertNameChange={this.alertNameChange}
         />
       </div>
     );

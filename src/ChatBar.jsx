@@ -7,7 +7,7 @@ function ChatBar ({currentUser, makeNewMessage, setUsername}){
 
   const currentUsername = currentUser.name || 'Your username here...'
 
-  const onChange = event => {
+  const onBlur = event => {
     const name = event.target.value;
     setUsername(name);
   }
@@ -15,26 +15,27 @@ function ChatBar ({currentUser, makeNewMessage, setUsername}){
   const onKeyPress = event => {
     if (event.key === 'Enter') {
       const content = event.target.value;
-      makeNewMessage(content)
+      makeNewMessage(content, 'postMessage');
       event.target.value = '';
     }
   }
 
   return (
-    <footer className="chatbar">
-      <input id="username-field"
-        onChange={onChange} 
-        className="chatbar-username" 
+    <footer className='chatbar'>
+      <input onBlur={onBlur}
+        // onChange={onChange} 
+        className='chatbar-username' 
         placeholder={currentUsername} 
         />
       <input onKeyPress={onKeyPress}
-        className="chatbar-message"
-        placeholder="Type a message and hit ENTER"
+        className='chatbar-message'
+        placeholder='Type a message and hit ENTER'
       />
     </footer>
   );
 }
 ChatBar.propTypes = {
+  // alertNameChange: PropTypes.func,
   setUsername: PropTypes.func,
   makeNewMessage: PropTypes.func,
   currentUser: PropTypes.object

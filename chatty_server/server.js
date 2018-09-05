@@ -1,5 +1,6 @@
 // server.js
 const uuidv1 = require('uuid/v1');
+const randomColor = require('random-color');
 
 const express = require('express');
 const SocketServer = require('ws').Server;
@@ -18,24 +19,68 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
+let clients = {
+  type: 'incomingClientData',
+  clientList: {}
+};
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
-// the ws parameter in the callback.
-wss.on('connection', ws => {
+// the client parameter in the callback.
+wss.on('connection', client => {
   console.log('Client connected');
 
-  ws.on('message', function incoming(data) {
+  const clientConnected = (client, clientID) => {
+    clients.clientList[clientID] = {
+      clientID,
+      color: randomColor().hexString()
+    }
+    client.send(JSON.stringify(clients))
+  }
+
+  const clientID = uuidv1();
+  clientConnected(client, clientID);
+  console.log('Clients:\n', clients.clientList);
+
+
+  client.on('message', function incoming(data) {
     const message = JSON.parse(data);
+    const type =
+      message.type === 'postMessage'
+        ? 'incomingMessage'
+        : 'incomingNotification';
+    // console.log('incoming message:', message);
     console.log(`User ${message.username} said ${message.content}`)
     const newMessage = {
+      type,
       id: uuidv1(),
       username: message.username,
       content: message.content
-    }
-    console.log('This is newMessage before being sent', newMessage);
-    ws.send(JSON.stringify(newMessage));
+    };
+    // console.log('This is newMessage before being sent', newMessage);
+    const messageString = JSON.stringify(newMessage);
+    broadcastMessage(messageString);
   });
 
+  const broadcastMessage = message => {
+    wss.clients.forEach(function each(client) {
+      // if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      // }
+    });
+  };
+
+  const clientDisconected = clientId => {
+    const client = clients.clientList[clientId]
+    if (!client) return // catch race condition
+    console.log(`<< (${clientId}) disconnected`)
+    delete clients.clientList[clientId]
+  }
+
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  client.on('close', () => {
+    console.log('Client disconnected');
+    clientDisconected(clientID);
+  });
+
 });

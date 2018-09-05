@@ -6,7 +6,11 @@ import PropTypes from 'prop-types';
 function MessageList ({messages}) {
   // console.log(messages)
   const allMessages = messages.map( message =>
-    <Message key={message.id} username={message.username} content={message.content} />
+    <Message key={message.id} 
+    username={message.username} 
+    content={message.content}
+    type={message.type} 
+    />
   )
   return (
     <main className="messages">
