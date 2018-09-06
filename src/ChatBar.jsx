@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 function ChatBar ({currentUser, makeNewMessage, setUsername}){
 
   const currentUsername = (currentUser.name === 'Anonymous') ? 'Your username here...' : currentUser.name;
