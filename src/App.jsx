@@ -23,6 +23,7 @@ export default class App extends Component {
     const oldMessages = this.state.messages;
     const newMessages = [...oldMessages, message];
     this.setState({ messages: newMessages });
+    document.getElementById( 'bottom' ).scrollIntoView();
   }
 
   setUsername(name) {

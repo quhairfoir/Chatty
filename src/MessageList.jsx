@@ -16,6 +16,7 @@ function MessageList ({messages}) {
   return (
     <main className="messages">
     {allMessages}
+    <div id="bottom"></div>
     </main>
   );
 }

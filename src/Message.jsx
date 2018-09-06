@@ -7,15 +7,26 @@ function Message({ username, content, type, color }) {
 
   const regex = /https?:\/\/(~?\w+(-?\w*)+(\/|\.))+(png|jpg|gif)/gi;
 
-  // console.log('Message body is image URL?', regex.test(content));
+  const handleImageURL = (message) => {
+    let newHTML;
+    const imageMatch = message.match(regex);
+    console.log('This is imageMatch inside function:', imageMatch);
+    if (imageMatch) {
+    newHTML = message.replace(imageMatch[0], `<img src='${imageMatch[0]}' />`);
+    } else {
+      newHTML = message;
+    }
+    console.log('This is newHTML inside function:', newHTML);
+    return `<div>${newHTML}</div>`;
+  } 
 
-  const displayContent = (regex.test(content)) ? <img src={content} /> : content;
+  const displayContent = handleImageURL(content);
 
   const messageHTML =
     type === 'incomingMessage' ? (
       <div className='message'>
         <span className='message-username' style={usernameColor}>{username}</span>
-        <span className='message-content'>{displayContent}</span>
+        <span className='message-content' dangerouslySetInnerHTML={{__html: displayContent}}></span>
       </div>
     ) : (
       <div className='message system'>
