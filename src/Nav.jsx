@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 function Nav({clients}) {
 
-  console.log('This is Object.keys(clients).length:', Object.keys(clients).length);
-
   const clientDisplay = (Object.keys(clients).length === 1) ? '1 client connected: (you!)' : `${Object.keys(clients).length} clients connected` ;
 
   return (

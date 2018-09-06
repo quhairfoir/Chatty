@@ -65,7 +65,6 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount <App />');
     setTimeout(() => {
       console.log('Simulating incoming message');
       const newMessage = {

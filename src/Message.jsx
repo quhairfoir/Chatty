@@ -5,8 +5,7 @@ function Message({ username, content, type, color }) {
 
   const usernameColor = color ? {color: `${color}`} : '';
 
-  // regex and function to detect image urls and change message 
-  // if an image is found
+  // regex and function to detect image urls and change message if an image is found
   const regex = /https?:\/\/(~?\w+(-?\w*)+(\/|\.))+(png|jpg|gif)/gi;
   const handleImageURL = (message) => {
     let newHTML;

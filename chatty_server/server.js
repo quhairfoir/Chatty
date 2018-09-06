@@ -28,7 +28,7 @@ let clients = {
 // When a client connects they are assigned a socket, represented by
 // the client parameter in the callback.
 wss.on('connection', client => {
-  console.log('Client connected');
+  console.log(`(${clientID}) connected >>`);
 
   // helper function to send all message types
   const broadcastMessage = message => {
@@ -54,7 +54,6 @@ wss.on('connection', client => {
   // to client list on connection
   const clientID = uuidv1();
   clientConnected(client, clientID);
-  console.log('Clients:\n', clients.clientList);
 
   // processes incoming messages and broadcasts back
   client.on('message', function incoming(data) {
@@ -63,7 +62,6 @@ wss.on('connection', client => {
       message.type === 'postMessage'
         ? 'incomingMessage'
         : 'incomingNotification';
-    console.log(`User ${message.username}, who has color ${message.color} said ${message.content}`)
     const newMessage = {
       type,
       id: uuidv1(),
@@ -76,11 +74,11 @@ wss.on('connection', client => {
   });  
 
   // function to remove user from list and cbroadcast disconnection  
-  const clientDisconected = clientId => {
-    const client = clients.clientList[clientId]
+  const clientDisconected = clientID => {
+    const client = clients.clientList[clientID]
     if (!client) return // catch race condition
-    console.log(`<< (${clientId}) disconnected`)
-    delete clients.clientList[clientId]
+    console.log(`<< (${clientID}) disconnected`)
+    delete clients.clientList[clientID]
     broadcastMessage(JSON.stringify(clients))
   }
 
