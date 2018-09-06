@@ -19,6 +19,8 @@ export default class App extends Component {
     this.setUsername = this.setUsername.bind(this);
   }
 
+  // adds message to state message array
+  // on message addition auto scrolls the page to newest message
   addNewMessage(message) {
     const oldMessages = this.state.messages;
     const newMessages = [...oldMessages, message];
@@ -34,6 +36,7 @@ export default class App extends Component {
     this.setState({currentUser: {name}});
   }
 
+  // constructs a user message to send to server
   makeNewMessage(content, type) {
     const username = (type === 'postMessage') ? this.state.currentUser.name : '';
     const newMessage = {
@@ -49,6 +52,7 @@ export default class App extends Component {
     this.state.connection.send(JSON.stringify(message));
   }
 
+  // sorts messages into types and takes appropriate action
   handleMessage(event) {
     let message = JSON.parse(event.data);
     if (message.type === 'incomingClientData') {

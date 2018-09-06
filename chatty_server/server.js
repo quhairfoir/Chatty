@@ -30,14 +30,14 @@ let clients = {
 wss.on('connection', client => {
   console.log('Client connected');
 
+  // helper function to send all message types
   const broadcastMessage = message => {
     wss.clients.forEach(function each(client) {
-      // if (client.readyState === WebSocket.OPEN) {
         client.send(message);
-      // }
     });
   };
 
+  // helper function to handle new client connection
   const clientConnected = (client, clientID) => {
     clients.clientList[clientID] = {
       clientID,
@@ -49,11 +49,14 @@ wss.on('connection', client => {
     broadcastMessage(JSON.stringify(clients))
   }
 
+  // set a user id for newly connected client, then:
+  // uses above helper function to set user id and add 
+  // to client list on connection
   const clientID = uuidv1();
   clientConnected(client, clientID);
   console.log('Clients:\n', clients.clientList);
 
-
+  // processes incoming messages and broadcasts back
   client.on('message', function incoming(data) {
     const message = JSON.parse(data);
     const type =
@@ -72,7 +75,7 @@ wss.on('connection', client => {
     broadcastMessage(messageString);
   });  
 
-  // broadcasts disconnection message 
+  // function to remove user from list and cbroadcast disconnection  
   const clientDisconected = clientId => {
     const client = clients.clientList[clientId]
     if (!client) return // catch race condition

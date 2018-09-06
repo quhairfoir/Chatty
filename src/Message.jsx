@@ -5,21 +5,19 @@ function Message({ username, content, type, color }) {
 
   const usernameColor = color ? {color: `${color}`} : '';
 
+  // regex and function to detect image urls and change message 
+  // if an image is found
   const regex = /https?:\/\/(~?\w+(-?\w*)+(\/|\.))+(png|jpg|gif)/gi;
-
   const handleImageURL = (message) => {
     let newHTML;
     const imageMatch = message.match(regex);
-    console.log('This is imageMatch inside function:', imageMatch);
     if (imageMatch) {
     newHTML = message.replace(imageMatch[0], `<img src='${imageMatch[0]}' />`);
     } else {
       newHTML = message;
     }
-    console.log('This is newHTML inside function:', newHTML);
     return `<div>${newHTML}</div>`;
   } 
-
   const displayContent = handleImageURL(content);
 
   const messageHTML =
@@ -33,11 +31,6 @@ function Message({ username, content, type, color }) {
         {content}
       </div>
     );
-  console.log(
-    'This is username and content inside message:',
-    username,
-    content
-  );
   return (
     <div>
     {messageHTML}
