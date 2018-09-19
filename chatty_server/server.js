@@ -13,8 +13,7 @@ const server = express()
   // Make the express server serve static assets (html, javascript, css) from the /public folder
   .use(express.static('public'))
   .listen(PORT, '0.0.0.0', 'localhost', () =>
-    console.log(`Listening on ${PORT}`)
-  );
+    console.log(`Listening on ${PORT}`))
 
 // Create the WebSockets server
 const wss = new SocketServer({ server });
@@ -28,8 +27,6 @@ let clients = {
 // When a client connects they are assigned a socket, represented by
 // the client parameter in the callback.
 wss.on('connection', client => {
-  console.log(`(${clientID}) connected >>`);
-
   // helper function to send all message types
   const broadcastMessage = message => {
     wss.clients.forEach(function each(client) {
@@ -84,7 +81,6 @@ wss.on('connection', client => {
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   client.on('close', () => {
-    console.log('Client disconnected');
     clientDisconected(clientID);
   });
 

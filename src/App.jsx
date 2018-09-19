@@ -66,7 +66,7 @@ export default class App extends Component {
 
   componentDidMount() {
     setTimeout(() => {
-      console.log('Simulating incoming message');
+      // console.log('Simulating incoming message');
       const newMessage = {
         id: 3,
         username: 'Michelle',
@@ -79,7 +79,7 @@ export default class App extends Component {
     }, 3000);
     const connection = new WebSocket('ws://localhost:3001');
     connection.onopen = function() {
-      console.log('Connected to server');
+      // console.log('Connected to server');
     };
     this.setState({ connection });
     connection.onmessage = this.handleMessage;
