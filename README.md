@@ -10,12 +10,7 @@ A minimal ReactJS and Websocket chat app.
 
 ### Getting Started
 
-```
-
 Clone the repo 
-
-```
-
 Install the dependencies and start the server.
 
 ```
